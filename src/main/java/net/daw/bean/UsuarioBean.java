@@ -11,6 +11,10 @@ public class UsuarioBean {
     public UsuarioBean() {
 
     }
+    
+    public UsuarioBean(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;
