@@ -34,37 +34,39 @@ public class UsuarioDao {
             throw new Exception("ClienteDao.getPage: Error: " + e.getMessage());
         }
     }
- 
-     public int getPages(int intRegsPerPag, ArrayList<FilterBean> hmFilter, HashMap<String, String> hmOrder) throws Exception {
+
+    public int getPages(int intRegsPerPag, ArrayList<FilterBean> alFilter, HashMap<String, String> hmOrder) throws Exception {
         int pages;
         try {
             oMysql.conexion(enumTipoConexion);
-            pages = oMysql.getPages("usuario", intRegsPerPag, hmFilter, hmOrder);
+            pages = oMysql.getPages("usuario", intRegsPerPag, alFilter, hmOrder);
             oMysql.desconexion();
             return pages;
         } catch (Exception e) {
             throw new Exception("UsuarioDao.getPages: Error: " + e.getMessage());
+        } finally {
+            oMysql.desconexion();
         }
     }
 
-    public int getCount( ArrayList<FilterBean> hmFilter) throws Exception {
+    public int getCount(ArrayList<FilterBean> hmFilter) throws Exception {
         int pages;
         try {
             oMysql.conexion(enumTipoConexion);
-            pages = oMysql.getCount("usuario",  hmFilter);
+            pages = oMysql.getCount("usuario", hmFilter);
             oMysql.desconexion();
             return pages;
         } catch (Exception e) {
             throw new Exception("UsuarioDao.getCount: Error: " + e.getMessage());
         }
     }
-  
-    public ArrayList<UsuarioBean> getPage(int intRegsPerPag, int intPage, ArrayList<FilterBean>  hmFilter, HashMap<String, String> hmOrder) throws Exception {
+
+    public ArrayList<UsuarioBean> getPage(int intRegsPerPag, int intPage, ArrayList<FilterBean> alFilter, HashMap<String, String> hmOrder) throws Exception {
         ArrayList<Integer> arrId;
         ArrayList<UsuarioBean> arrUsuario = new ArrayList<>();
         try {
             oMysql.conexion(enumTipoConexion);
-            arrId = oMysql.getPage("usuario", intRegsPerPag, intPage, hmFilter, hmOrder);
+            arrId = oMysql.getPage("usuario", intRegsPerPag, intPage, alFilter, hmOrder);
             Iterator<Integer> iterador = arrId.listIterator();
             while (iterador.hasNext()) {
                 UsuarioBean oUsuarioBean = new UsuarioBean(iterador.next());
@@ -73,15 +75,10 @@ public class UsuarioDao {
             oMysql.desconexion();
             return arrUsuario;
         } catch (Exception e) {
-            throw new Exception("UsuarioDao.getPage: Error: " + e.getMessage());
+            throw new Exception("HiloDao.getPage: Error: " + e.getMessage());
+        } finally {
+            oMysql.desconexion();
         }
-    }
-
-    public ArrayList<String> getNeighborhood(String strLink, int intPageNumber, int intTotalPages, int intNeighborhood) throws Exception {
-        oMysql.conexion(enumTipoConexion);
-        ArrayList<String> n = oMysql.getNeighborhood(strLink, intPageNumber, intTotalPages, intNeighborhood);
-        oMysql.desconexion();
-        return n;
     }
 
     public UsuarioBean get(UsuarioBean oUsuarioBean) throws Exception {
@@ -91,7 +88,10 @@ public class UsuarioDao {
                 if (!oMysql.existsOne("usuario", oUsuarioBean.getId())) {
                     oUsuarioBean.setId(0);
                 } else {
-                    oUsuarioBean.setLogin(oMysql.getOne("usuario", "login", oUsuarioBean.getId()));                }
+                    oUsuarioBean.setLogin(oMysql.getOne("usuario", "login", oUsuarioBean.getId()));
+                    oUsuarioBean.setPassword(oMysql.getOne("usuario", "password", oUsuarioBean.getId()));
+
+                }
             } catch (Exception e) {
                 throw new Exception("UsuarioDao.getUsuario: Error: " + e.getMessage());
             } finally {
@@ -110,12 +110,13 @@ public class UsuarioDao {
             if (oUsuarioBean.getId() == 0) {
                 oUsuarioBean.setId(oMysql.insertOne("usuario"));
             }
-            oMysql.updateOne(oUsuarioBean.getId(), "usuario", "nombre", oUsuarioBean.getLogin());
+            oMysql.updateOne(oUsuarioBean.getId(), "usuario", "login", oUsuarioBean.getLogin());
+            oMysql.updateOne(oUsuarioBean.getId(), "usuario", "password", oUsuarioBean.getPassword());
 
             oMysql.commitTrans();
         } catch (Exception e) {
             oMysql.rollbackTrans();
-            throw new Exception("UsuarioDao.setUsuario: Error: " + e.getMessage());
+            throw new Exception("UsuarioDao.setCliente: Error: " + e.getMessage());
         } finally {
             oMysql.desconexion();
         }
@@ -127,31 +128,9 @@ public class UsuarioDao {
             oMysql.removeOne(oUsuarioBean.getId(), "usuario");
             oMysql.desconexion();
         } catch (Exception e) {
-            throw new Exception("UsuarioDao.removeUsuario: Error: " + e.getMessage());
+            throw new Exception("UsuarioDao.removeCliente: Error: " + e.getMessage());
         } finally {
             oMysql.desconexion();
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }

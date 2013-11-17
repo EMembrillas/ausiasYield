@@ -1,21 +1,21 @@
-<%@page import="java.util.Arrays"%>
 <%@page import="net.daw.helper.FilterBean"%>
-<%@ page import="net.daw.helper.Contexto"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.util.Iterator"%>
-<%@ page import="net.daw.bean.UsuarioBean"%>
+<%@page import="net.daw.bean.EntradaBean"%>
+<%@ page import="net.daw.helper.Contexto"%>
 <%
     Contexto oContexto = (Contexto) request.getAttribute("contexto");
     ArrayList<Object> alObjetoParametro = (ArrayList<Object>) oContexto.getParametro();
-    ArrayList<UsuarioBean> alPagina = (ArrayList<UsuarioBean>) alObjetoParametro.get(0);
-    Iterator<UsuarioBean> oIterador = alPagina.listIterator();
+    ArrayList<EntradaBean> alPagina = (ArrayList<EntradaBean>) alObjetoParametro.get(0);
+    Iterator<EntradaBean> oIterador = alPagina.listIterator();
 %>
 <div class="row-fluid">
     <div class="span8">
-        <h1>Listado de Usuarios</h1>
+        <h1>Listado de entradas</h1>
         <%
             if (!oIterador.hasNext()) {
-                out.print("<h4>Listado vac?o</h4>");
+                out.print("<h4>Listado vacío</h4>");
             } else {
         %>
         <%
@@ -31,15 +31,22 @@
                 out.print("<p>Listado filtrado: ");
                 ArrayList<FilterBean> alFilter = oContexto.getAlFilter();
                 Iterator iterator = alFilter.iterator();
+                int bAddProductToClient = 0;
                 while (iterator.hasNext()) {
                     FilterBean oFilterBean = (FilterBean) iterator.next();
                     out.print("(" + oFilterBean.getFilter() + " " + oFilterBean.getFilterOperator() + " " + oFilterBean.getFilterValue() + ") ");
+                    if (oFilterBean.getFilter().equals("hilo") && oFilterBean.getFilterOperator().equals("equals")) {
+                        bAddProductToClient = Integer.parseInt(oFilterBean.getFilterValue());
+                    }
                 }
                 out.print("<a href=\"Controller?" + oContexto.getSerializedParamsExceptFilter() + "\">(Quitar filtro)</a></p>");
+                if (bAddProductToClient > 0) {
+                    out.print("<a class=\"btn\" type=\"button\" href=\"Controller?searchingfor=hilo&class=entrada&method=new&id_hilo=" + bAddProductToClient + "\">Añadir hilo a la entrada " + bAddProductToClient + "</a>");
+                }
             } else {
                 out.print("<p>Sin filtrar</p>");
             }
-        %>    
+        %>
         <%
             Integer registers = (Integer) alObjetoParametro.get(2);
             out.print("Mostrando " + oContexto.getNrpp().toString() + " registros de un total de " + registers.toString());
@@ -55,16 +62,19 @@
     </div>
     <div class="span4">
         <div class="text-right">
-            <legend>Filtro de Usuarios</legend> 
-            <form class="navbar-form pull-right" action="Controller" method="post" id="clienteForm">
+            <legend>Filtro de entrada</legend> 
+            <form class="navbar-form pull-right" action="Controller" method="post" id="filterForm">
                 <fieldset>                                               
                     <%=oContexto.getSerializedParamsExceptFilterFormFormat()%>       
                     <span>
                         <select id="filter" name="filter" width="80" style="width: 80px">
                             <option>id</option>
-                            <option>Enunciado</option>
-                            <option>Descripcion</option>                           
-                        </select>  
+                            <option>id_hilo</option>
+                            <option>id_usuario</option>
+                            <option>titulo</option>
+                            <option>contenido</option>
+                            <option>fecha</option>                            
+                        </select> 
                     </span>
                     <span>
                         <select id="filteroperator" name="filteroperator" width="80" style="width: 80px">
@@ -76,8 +86,8 @@
                             <option>lessorequal</option>
                             <option>greater</option>
                             <option>greaterorequal</option>                            
-                        </select>
-                        <input id="filtervalue" name="filtervalue" type="text" size="20" maxlength="50" value=""  width="100" style="width: 100px"/>
+                        </select>            
+                        <input id="filtervalue" name="filtervalue" type="search" size="20" maxlength="50" value=""  width="100" style="width: 100px"/>
                     </span>
                     <span>
                         <input type="submit" name="enviar" value="Filtrar" />
@@ -86,7 +96,7 @@
             </form>
         </div>
         <div class="text-right">
-            <legend>Registros por p?gina</legend> 
+            <legend>Registros por página</legend> 
             <form class="navbar-form pull-right" action="Controller" method="post" id="nrrpForm" >
                 <fieldset>                                               
                     <%=oContexto.getSerializedParamsExceptNrppFormFormat()%>       
@@ -121,41 +131,61 @@
     <tr>
         <th>id
             <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=id&ordervalue=asc"><i class="icon-arrow-up"></i></a>
-            <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=id&ordervalue=desc"><i class="icon-arrow-down"></i></a>        
+            <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=id&ordervalue=desc"><i class="icon-arrow-down"></i></a>
         </th>
-        <th>Usuario
-            <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=codigo&ordervalue=asc"><i class="icon-arrow-up"></i></a>
-            <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=codigo&ordervalue=desc"><i class="icon-arrow-down"></i></a>        
+        <th>id_hilo
+            <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=id_hilo&ordervalue=asc"><i class="icon-arrow-up"></i></a>
+            <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=id_hilo&ordervalue=desc"><i class="icon-arrow-down"></i></a>
+        </th>
+        <th>id_usuario
+            <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=id_usuario&ordervalue=asc"><i class="icon-arrow-up"></i></a>
+            <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=id_usuario&ordervalue=desc"><i class="icon-arrow-down"></i></a>
+        </th>
+        <th>titulo
+            <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=titulo&ordervalue=asc"><i class="icon-arrow-up"></i></a>
+            <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=titulo&ordervalue=desc"><i class="icon-arrow-down"></i></a>        
+        </th>
+        <th>contenido
+            <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=contenido&ordervalue=asc"><i class="icon-arrow-up"></i></a>
+            <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=contenido&ordervalue=desc"><i class="icon-arrow-down"></i></a>        
+        </th>
+        <th>fecha
+            <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=fecha&ordervalue=asc"><i class="icon-arrow-up"></i></a>
+            <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=fecha&ordervalue=desc"><i class="icon-arrow-down"></i></a>         
         </th>
         <th>Operaciones</th>
     </tr>
     <%
         while (oIterador.hasNext()) {
-            UsuarioBean oUsuarioBean = oIterador.next();
+            EntradaBean oEntradaBEAN = oIterador.next();
     %>
     <tr>
-        <td><%=oUsuarioBean.getId()%></td>
-        <td><%=oUsuarioBean.getLogin()%></td>
-
+        <td><%=oEntradaBEAN.getId()%></td>
         <td>
-           <!--</%=oBacklogBEAN.getTipoProducto().getDescripcion()%>
+            <%=oEntradaBEAN.getHilo().getNombre()%> (<%=oEntradaBEAN.getHilo().getId()%>)
             <div class="btn-group">
-                <a class="btn btn-mini" href="Controller?class=tipoproducto&method=list&id=</%=oBacklogBEAN.getId()%>&searchingfor=tipoproducto&returnclass=producto&returnmethod=update&returnphase=2"><i class="icon-search"></i></a>                                        
+                <a class="btn btn-mini" href="Controller?class=hilo&method=list&id=<%=oEntradaBEAN.getId()%>&searchingfor=hilo&returnclass=entrada&returnmethod=update&returnphase=2"><i class="icon-search"></i></a>                                        
+            </div>            
+        </td>
+        <td>
+            <%=oEntradaBEAN.getUsuario().getLogin()%> (<%=oEntradaBEAN.getUsuario().getId()%>)
+            <div class="btn-group">
+                <a class="btn btn-mini" href="Controller?class=usuario&method=list&id=<%=oEntradaBEAN.getId()%>&searchingfor=usuario&returnclass=entrada&returnmethod=update&returnphase=2"><i class="icon-search"></i></a>                                        
             </div>
-        </td> -->
+        </td>
+        <td><%=oEntradaBEAN.getTitulo()%></td>
+        <td><%=oEntradaBEAN.getContenido()%></td>
+        <%
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-YYYY");
+        %>
+        <td><%=formatoFecha.format(oEntradaBEAN.getFecha())%></td>
         <td>
             <div class="btn-toolbar">
-                <div class="btn-group">
-                    <%
-                        if (oContexto.getSearchingFor().equals("usuario")) {
-                            out.print("<a class=\"btn btn-mini\" href=\"Controller?" + oContexto.getSerializedParamsExcept(new ArrayList<String>(Arrays.asList("class", "method", "phase", "id_usuario", "id", "returnclass", "returnmethod", "returnphase", "searchingfor"))) + "class=" + oContexto.getClaseRetorno() + "&method=" + oContexto.getMetodoRetorno() + "&phase=" + oContexto.getFaseRetorno() + "&id_usuario=" + oUsuarioBean.getId() + "&id=" + oContexto.getId() + "\"><i class=\"icon-ok\"></i></a>");
-                        } else {
-                            out.print("<a class=\"btn btn-mini\" href=\"Controller?class=usuario&method=view&id=" + oUsuarioBean.getId() + "\"><i class=\"icon-eye-open\"></i></a>");
-                            out.print("<a class=\"btn btn-mini\" href=\"Controller?class=usuario&method=update&id=" + oUsuarioBean.getId() + "\"><i class=\"icon-pencil\"></i></a>");
-                            out.print("<a class=\"btn btn-mini\" href=\"Controller?class=usuario&method=remove&id=" + oUsuarioBean.getId() + "\"><i class=\"icon-trash\"></i></a>");
-                        }
-                    %>                 
-                </div>                
+                <div class="btn-group">                    
+                    <a class="btn btn-mini" href="Controller?class=entrada&method=view&id=<%=oEntradaBEAN.getId()%>"><i class="icon-eye-open"></i></a>
+                    <a class="btn btn-mini" href="Controller?class=entrada&method=update&id=<%=oEntradaBEAN.getId()%>"><i class="icon-pencil"></i></a>           
+                    <a class="btn btn-mini" href="Controller?class=entrada&method=remove&id=<%=oEntradaBEAN.getId()%>"><i class="icon-trash"></i></a>                         
+                </div>
             </div>
         </td>
     </tr>
