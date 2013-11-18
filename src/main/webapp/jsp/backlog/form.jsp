@@ -99,16 +99,10 @@
         </div> 
         <div class="control-group">
             <label class="control-label" for="id_usuario">Requerimiento </label> 
-            <div class="controls">    
-                
-                 <input readonly="true" id="id_requerimiento" class="input-mini"
+            <div class="controls">                
+                <input readonly="true" id="id_requerimiento" class="input-mini"
                        name="id_requerimiento" type="text" size="5" maxlength="5"
-                       value="<%=id_requerimiento%>" /> 
-                 
-                <!--<input readonly="true" id="id_requerimiento" class="input-mini"
-                       name="id_requerimiento" type="text" size="5" maxlength="5"
-                       value="</%=id_requerimiento%>" />  -->
-                
+                       value="<%=id_requerimiento%>" />  
                 <input <%=strControlEnabled%> type="submit" name="searchingfor" value="requerimiento" />
                 <span class="alert alert-success"><%=nomReq%></span>
             </div>
@@ -200,7 +194,11 @@
                                                value="<%=release%>" />
             </div>
         </div>
-        
+
+
+
+
+        </div>         
         <div class="control-group">
             <div class="controls">
                 <input type="submit" name="enviar" value="<%=strValueBoton%>" />

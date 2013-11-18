@@ -5,16 +5,13 @@ public class UsuarioBean {
     private int id = 0;
     private String login = "";
     private String password = "";
-
+    private Enum tipoUsuario = null;
+    
     public UsuarioBean() {
 
     }
 
     public UsuarioBean(Integer id) {
-        this.id = id;
-    }
-    
-    public UsuarioBean(int id) {
         this.id = id;
     }
 
