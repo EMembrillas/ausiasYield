@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="net.daw.helper.FilterBean"%>
 <%@ page import="net.daw.helper.Contexto"%>
@@ -61,9 +62,7 @@
                     <%=oContexto.getSerializedParamsExceptFilterFormFormat()%>       
                     <span>
                         <select id="filter" name="filter" width="80" style="width: 80px">
-                            <option>id</option>
-                            <option>Enunciado</option>
-                            <option>Descripcion</option>                           
+                            <option>id_usuario</option>                       
                         </select>  
                     </span>
                     <span>
@@ -135,7 +134,7 @@
             <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=precio&ordervalue=asc"><i class="icon-arrow-up"></i></a>
             <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=precio&ordervalue=desc"><i class="icon-arrow-down"></i></a>                
         </th>
-        <th>Tipo de producto
+        <th>Fecha de Alta
             <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=id_tipoproducto&ordervalue=asc"><i class="icon-arrow-up"></i></a>
             <a href="Controller?<%=oContexto.getSerializedParamsExceptOrder()%>&order=id_tipoproducto&ordervalue=desc"><i class="icon-arrow-down"></i></a>                            
         </th>
@@ -147,7 +146,7 @@
     %>
     <tr>
         <td><%=oBacklogBEAN.getId()%></td>
-                <td>
+        <td>
             <%=oBacklogBEAN.getUsuario().getLogin()%>(<%=oBacklogBEAN.getUsuario().getId()%>)
             <div class="btn-group">
                 <a class="btn btn-mini" href="Controller?class=usuario&method=list&id=<%=oBacklogBEAN.getId()%>&searchingfor=usuario&returnclass=backlog&returnmethod=update&returnphase=2"><i class="icon-search"></i></a>                                        
@@ -155,12 +154,8 @@
         </td>
         <td><%=oBacklogBEAN.getEnunciado()%></td>
         <td><%=oBacklogBEAN.getDescripciondetallada()%></td>
-        <td>
-           <!--</%=oBacklogBEAN.getTipoProducto().getDescripcion()%>
-            <div class="btn-group">
-                <a class="btn btn-mini" href="Controller?class=tipoproducto&method=list&id=</%=oBacklogBEAN.getId()%>&searchingfor=tipoproducto&returnclass=producto&returnmethod=update&returnphase=2"><i class="icon-search"></i></a>                                        
-            </div>
-        </td> -->
+        <% SimpleDateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy");%>
+        <td><%=formatoFecha.format(oBacklogBEAN.getFechaalta())%></td>
         <td>
             <div class="btn-toolbar">
                 <div class="btn-group">

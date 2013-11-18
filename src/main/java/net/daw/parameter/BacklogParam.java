@@ -13,7 +13,7 @@ import net.daw.bean.BacklogBean;
 
 /**
  *
- * @author rafa
+ * @author Edu Membrillas
  */
 public class BacklogParam {
 
@@ -42,15 +42,54 @@ public class BacklogParam {
             if ((request.getParameter("id_usuario") != null)) {
                 oBacklog.getUsuario().setId(Integer.parseInt(request.getParameter("id_usuario")));
             }
-           /* if ((request.getParameter("id_producto") != null)) {
-                oBacklog.getProducto().setId(Integer.parseInt(request.getParameter("id_producto")));
+
+            if ((request.getParameter("id_requerimiento") != null)) {
+                oBacklog.setId_requerimiento(Integer.parseInt(request.getParameter("id_requerimiento")));
             }
-            if ((request.getParameter("cantidad") != null)) {
-                oBacklog.setCantidad(Integer.parseInt(request.getParameter("cantidad")));
+
+            if ((request.getParameter("enunciado") != null)) {
+                oBacklog.setEnunciado(request.getParameter("enunciado"));
             }
-            if ((request.getParameter("fecha") != null)) {
-                oBacklog.setFecha(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fecha")));
-            }*/
+            if ((request.getParameter("descripcion") != null)) {
+                oBacklog.setDescripciondetallada(request.getParameter("descripcion"));
+            }
+
+            if ((request.getParameter("fechaalta") != null)) {
+                oBacklog.setFechaalta(new SimpleDateFormat("dd-MM-yyyy").parse(request.getParameter("fechaalta")));
+            }
+
+            if ((request.getParameter("fechainicio") != null)) {
+                oBacklog.setFechainicio(new SimpleDateFormat("dd-MM-yyyy").parse(request.getParameter("fechainicio")));
+            }
+
+            if ((request.getParameter("fechafin") != null)) {
+                oBacklog.setFechafin(new SimpleDateFormat("dd-MM-yyyy").parse(request.getParameter("fechafin")));
+            }
+
+            if ((request.getParameter("fechainiciovista") != null)) {
+                oBacklog.setFechainicioprevista(new SimpleDateFormat("dd-MM-yyyy").parse(request.getParameter("fechainiciovista")));
+            }
+
+            if ((request.getParameter("fechafinprevista") != null)) {
+                oBacklog.setFechafinprevista(new SimpleDateFormat("dd-MM-yyyy").parse(request.getParameter("fechafinprevista")));
+            }
+
+            if ((request.getParameter("horasduracionprevista") != null)) {
+                oBacklog.setHorasduracionprevista(Integer.parseInt(request.getParameter("horasduracionprevista")));
+            }
+
+            if ((request.getParameter("porcentajecompletado") != null)) {
+                oBacklog.setPorcentajecompletado(Integer.parseInt(request.getParameter("porcentajecompletado")));
+            }
+
+            if ((request.getParameter("sprint") != null)) {
+                oBacklog.setSprint(Integer.parseInt(request.getParameter("sprint")));
+            }
+
+            if ((request.getParameter("release") != null)) {
+                oBacklog.setRelease(Integer.parseInt(request.getParameter("release")));
+            }
+
         } catch (NumberFormatException e) {
             throw new NumberFormatException("CompraParam: Error: load: Formato de datos en parámetros incorrecto " + e.getMessage());
         }

@@ -17,7 +17,7 @@ import net.daw.parameter.BacklogParam;
  *
  * @author Edu Membrillas
  */
-public class BacklogUpdate2 implements Operation {
+public class BacklogNew2 implements Operation {
 
     @Override
     public Object execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -30,7 +30,7 @@ public class BacklogUpdate2 implements Operation {
                 oContexto.setFase("1");
                 oContexto.setSearchingFor("usuario");
                 oContexto.setClaseRetorno("backlog");
-                oContexto.setMetodoRetorno("update");
+                oContexto.setMetodoRetorno("new");
                 oContexto.setFaseRetorno("1");
                 oContexto.removeParam("id_usuario");
                 UsuarioList1 oOperacion = new UsuarioList1();
@@ -39,10 +39,9 @@ public class BacklogUpdate2 implements Operation {
             default:
                 oContexto.setVista("jsp/mensaje.jsp");
                 BacklogBean oBacklogBean = new BacklogBean();
-                BacklogDao oBacklogDao= new BacklogDao(oContexto.getEnumTipoConexion());
+                BacklogDao oBacklogDao = new BacklogDao(oContexto.getEnumTipoConexion());
                 BacklogParam oBacklogParam = new BacklogParam(request);
                 oBacklogBean = oBacklogParam.loadId(oBacklogBean);
-                oBacklogBean = oBacklogDao.get(oBacklogBean);
                 try {
                     oBacklogBean = oBacklogParam.load(oBacklogBean);
                 } catch (NumberFormatException e) {
@@ -53,11 +52,10 @@ public class BacklogUpdate2 implements Operation {
                 } catch (Exception e) {
                     throw new ServletException("BacklogController: Update Error: Phase 2: " + e.getMessage());
                 }
-                String strMensaje = "Se ha cambiado la información de backlog con id=" + Integer.toString(oBacklogBean.getId()) + "<br />";
-                strMensaje += "<a href=\"Controller?class=backlog&method=list&filter=id_usuario&filteroperator=equals&filtervalue=" + oBacklogBean.getUsuario().getId() + "\">Ver Backlogs de este cliente</a><br />";
-                strMensaje += "<a href=\"Controller?class=backlog&method=view&id=" + oBacklogBean.getId() + "\">Ver BackLog creado en el formulario</a><br />";
+                String strMensaje = "Se ha añadido la información de backlog con id=" + Integer.toString(oBacklogBean.getId()) + "<br />";
+                strMensaje += "<a href=\"Controller?class=backlog&method=list&filter=id_usuario&filteroperator=equals&filtervalue=" + oBacklogBean.getUsuario().getId() + "\">Ver Backlogs de este usuario</a><br />";
+                strMensaje += "<a href=\"Controller?class=backlog&method=view&id=" + oBacklogBean.getId() + "\">Ver Backlog creado en el formulario</a><br />";
                 return strMensaje;
         }
     }
-
 }

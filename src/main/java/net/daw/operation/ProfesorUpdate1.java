@@ -3,43 +3,45 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package net.daw.operation;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import net.daw.bean.BacklogBean;
-import net.daw.dao.BacklogDao;
+import net.daw.bean.ProfesorBean;
+import net.daw.dao.ProfesorDao;
 import net.daw.helper.Contexto;
-import net.daw.parameter.BacklogParam;
+import net.daw.parameter.ProfesorParam;
 
 /**
  *
- * @author Edu Membrillas
+ * @author al037184
  */
-public class BacklogUpdate1 implements Operation {
-
-    @Override
+public class ProfesorUpdate1 implements Operation {
+      @Override
     public Object execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Contexto oContexto = (Contexto) request.getAttribute("contexto");
-        oContexto.setVista("jsp/backlog/form.jsp");
-        BacklogBean oBacklogBean;
-        BacklogDao oBacklogDao;
-        oBacklogBean = new BacklogBean();
-        BacklogParam oBacklog = new BacklogParam(request);
-        oBacklogBean = oBacklog.loadId(oBacklogBean);
-        oBacklogDao = new BacklogDao(oContexto.getEnumTipoConexion());
+        oContexto.setVista("jsp/profesor/form.jsp");
+        ProfesorBean oProfesorBean;
+        ProfesorDao oProfesorDao;
+        oProfesorBean = new ProfesorBean();
+        ProfesorParam oProfesorParam = new ProfesorParam(request);
+        oProfesorBean = oProfesorParam.loadId(oProfesorBean);
+        oProfesorDao = new ProfesorDao(oContexto.getEnumTipoConexion());
         try {
-            oBacklogBean = oBacklogDao.get(oBacklogBean);
+            oProfesorBean = oProfesorDao.get(oProfesorBean);
         } catch (Exception e) {
-            throw new ServletException("BacklogController: Update Error: Phase 1: " + e.getMessage());
+            throw new ServletException("ProfesorController: Update Error: Phase 1: " + e.getMessage());
         }
         try {
-            oBacklogBean = oBacklog.load(oBacklogBean);
+            oProfesorBean = oProfesorParam.load(oProfesorBean);
         } catch (NumberFormatException e) {
             oContexto.setVista("jsp/mensaje.jsp");
             return "Tipo de dato incorrecto en uno de los campos del formulario";
         }
-        return oBacklogBean;
+        return oProfesorBean;
     }
+    
 }
+
