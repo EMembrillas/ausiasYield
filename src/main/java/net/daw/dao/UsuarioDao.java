@@ -3,13 +3,16 @@ package net.daw.dao;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import javax.servlet.http.HttpServlet;
+import net.daw.bean.AlumnoBean;
+import net.daw.bean.EmpresaBean;
+import net.daw.bean.ProfesorBean;
 import net.daw.bean.UsuarioBean;
 import net.daw.data.Mysql;
 import net.daw.helper.Enum;
-import net.daw.helper.Enum.TipoUsuario;
 import net.daw.helper.FilterBean;
 
-public class UsuarioDao {
+public class UsuarioDao extends HttpServlet {
 
     private final Mysql oMysql;
     private final Enum.Connection enumTipoConexion;
@@ -35,8 +38,8 @@ public class UsuarioDao {
             throw new Exception("ClienteDao.getPage: Error: " + e.getMessage());
         }
     }
-    
-       public int getPages(int intRegsPerPag, ArrayList<FilterBean> alFilter, HashMap<String, String> hmOrder) throws Exception {
+
+    public int getPages(int intRegsPerPag, ArrayList<FilterBean> alFilter, HashMap<String, String> hmOrder) throws Exception {
         int pages;
         try {
             oMysql.conexion(enumTipoConexion);
@@ -91,10 +94,6 @@ public class UsuarioDao {
                 } else {
                     oUsuarioBean.setLogin(oMysql.getOne("usuario", "login", oUsuarioBean.getId()));
                     oUsuarioBean.setPassword(oMysql.getOne("usuario", "password", oUsuarioBean.getId()));
-                    //Hacer aqui lo del tipo de usuario.
-                    //Aqui se rellena el bean de tipoUsuario.
-                    //
-
                 }
             } catch (Exception e) {
                 throw new Exception("UsuarioDao.getUsuario: Error: " + e.getMessage());
@@ -103,6 +102,32 @@ public class UsuarioDao {
             }
         } else {
             oUsuarioBean.setId(0);
+        }
+        return oUsuarioBean;
+    }
+
+    public UsuarioBean type(UsuarioBean oUsuarioBean) throws Exception {
+
+        try {
+            AlumnoDao oAlumnoDao = new AlumnoDao(enumTipoConexion);
+            AlumnoBean oAlumnoBean = oAlumnoDao.getFromId_usuario(oUsuarioBean);
+            oUsuarioBean.setTipoUsuario(Enum.TipoUsuario.Alumno);
+        } catch (Exception e1) {
+            try {
+                ProfesorDao oProfesorDao = new ProfesorDao(enumTipoConexion);
+                ProfesorBean oProfesorBean = oProfesorDao.getFromId_usuario(oUsuarioBean);
+                oUsuarioBean.setTipoUsuario(Enum.TipoUsuario.Profesor);
+            } catch (Exception e2) {
+                try {
+                    EmpresaDao oEmpresaDao = new EmpresaDao(enumTipoConexion);
+                    EmpresaBean oEmpresaBean = oEmpresaDao.getFromId_usuario(oUsuarioBean);
+                    oUsuarioBean.setTipoUsuario(Enum.TipoUsuario.Empresa);
+                } catch (Exception e3) {
+                    throw new Exception("UsuarioDao.type: Error: " + e3.getMessage());
+                }
+            }
+        } finally {
+            oMysql.desconexion();
         }
         return oUsuarioBean;
     }
