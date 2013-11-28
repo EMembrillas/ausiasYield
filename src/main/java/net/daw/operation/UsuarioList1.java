@@ -16,7 +16,6 @@ import net.daw.helper.Pagination;
  * @since mie, 13 noviembre 2013
  */
 public class UsuarioList1 implements Operation {
-
     @Override
     public Object execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Contexto oContexto = (Contexto) request.getAttribute("contexto");
