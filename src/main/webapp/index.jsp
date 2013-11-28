@@ -1,4 +1,3 @@
-<%@page import="net.daw.bean.RequerimientoBean"%>
 <%@page import="net.daw.dao.UsuarioDao"%>
 <%@page import="net.daw.helper.Contexto"%>
 <%@page import="net.daw.bean.UsuarioBean"%>
